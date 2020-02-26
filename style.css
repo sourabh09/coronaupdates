@@ -288,3 +288,6 @@ font-family: 'Space Mono', monospace;
 .mdl-navigation__link>img{
   max-width:40px;
 }
+.mdl-navigation{
+  text-align:center;
+}
