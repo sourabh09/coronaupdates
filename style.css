@@ -284,3 +284,7 @@ box-shadow: 4px 3px 36px 10px rgba(0,0,0,0.57);
  margin: 0 auto;
 font-family: 'Space Mono', monospace;
 }
+
+.mdl-navigation__link>img{
+  max-width:40px;
+}
