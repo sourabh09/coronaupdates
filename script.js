@@ -1,4 +1,6 @@
+    var selectedCountry = "";
     var category = "corona virus";
+    var count=[];
 
     function getNews(){
     $('.dummy').show();
@@ -109,7 +111,8 @@ $(document).ready(function () {
 
 })
 
-function getStatus() {
+
+function createList() {
 
         $.ajax({
             url: 'https://coronavirus-tracker-api.herokuapp.com/all',
@@ -117,12 +120,48 @@ function getStatus() {
             success: function(data) {
 
               console.log(data);
-                $('.dummy').hide();
-              $('.root2').html('');
-             $('.root2').append('<div class="number"><h3>Confirmed</h3><span class="count">'+data.latest.confirmed+'</span></div>'); 
-             $('.root2').append('<div class="number"><h3>Deaths</h3><span class="count">'+data.latest.deaths+'</span></div>');
-             $('.root2').append('<div class="number"><h3>Recovered</h3><span class="count">'+data.latest.recovered+'</span></div>');
-             $('.refreshbutton').css("display","block");
+             
+             for(var i=0;i<=data.confirmed.locations.length-1;i++){
+
+           if ($('option').text().indexOf(data.confirmed.locations[i].country) === -1) {
+            
+              $('select').append("<option value='"+data.confirmed.locations[i].country+"'>"+data.confirmed.locations[i].country+"</option>")
+            
+                 }
+    
+              }
+
+              $('.submitsection').css("display","block");
+           }
+     })
+
+    }
+
+function getCountryData() {
+
+        $.ajax({
+            url: 'https://coronavirus-tracker-api.herokuapp.com/all',
+            
+            success: function(data) {
+
+              console.log(data);
+              count=[];
+           
+             for(var i=0;i<=data.confirmed.locations.length-1;i++){
+
+              if(data.confirmed.locations[i].country==selectedCountry){
+
+              count.push(data.confirmed.locations[i].latest);
+
+                }
+                 
+             }
+              //alert(count.length);
+              var totalcount = count.reduce((a, b) => a + b, 0);
+              //alert(totalcount)
+
+        $('.countrydata').append(selectedCountry+" "+totalcount+'<br>'); 
+        $('.countrydata').css("display","block");
 
           $('.count').each(function () {
         $(this).prop('Counter',0).animate({
@@ -142,3 +181,41 @@ function getStatus() {
         })
 
     }
+
+    $(document).ready(function(){
+    $("#octane").change(function(){
+        
+        selectedCountry = $(this).children("option:selected").val();
+        getCountryData();
+    });
+});
+
+
+    function getAllData() {
+
+      $('.dummy').css("display","block");
+      getNews()
+
+        $.ajax({
+            url: 'https://coronavirus-tracker-api.herokuapp.com/all',
+            
+            success: function(data) {
+
+              console.log(data);
+             $('.dummy').hide();
+             $('.alldata').html('');
+             $('.alldata').append('<span>Total Count</span>'+'<br>'+'Confirmed '+data.latest.confirmed+'<br>'+'Deaths '+data.latest.deaths+'<br>'+'Recovered '+data.latest.recovered); 
+          
+               $('.alldata').css("display","block");
+
+             
+             }
+
+        })
+
+    
+
+  }
+
+
+   
